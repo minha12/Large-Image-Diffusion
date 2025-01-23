@@ -170,5 +170,4 @@ cython_debug/
 
 src
 old_notebooks/
-scripts
 logs/

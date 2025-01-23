@@ -1,9 +1,6 @@
 # Learned representation-guided diffusion models for large-image generation
 
 
-
-Official code for our CVPR 2024 publication [Learned representation-guided diffusion models for large-image generation](https://arxiv.org/abs/2312.07330). This codebase builds heavily on [CompVis/latent-diffusion](https://github.com/CompVis/latent-diffusion) and [PathLDM](https://github.com/cvlab-stonybrook/PathLDM).
-
 ![teaser figure](./teaser.png)
 ## Requirements
 To install python dependencies, 
@@ -52,7 +49,25 @@ We provide the following trained models
 ## Training
 
 * **Customization:** Create a config file similar to [./configs/latent-diffusion/crc/only_patch_20x.yaml](./configs/latent-diffusion/crc/only_patch_20x.yaml) to train your own diffusion model.
-* **Sample Dataset:** We provide a sample dataset [here](./notebooks/dataset_samples/brca_hipt_patches.pickle) . Study it to understand the required data format.
+* **Sample Dataset:** We provide a sample dataset [here](./notebooks/dataset_samples/brca_hipt_patches.pickle).
+
+  Dataset Structure:
+  - `brca_hipt_patches.pickle`:
+    - List of 100 items, each containing:
+      - `feat_20x`: Feature vector (384,) float32
+      - `image`: RGB image patches (256,256,3) uint8
+  
+  - `brca_hipt_large_images.pickle`:
+    - List of 15 items, each containing:
+      - `feat_20x`: Feature matrix (16,384) float32
+      - `img_20x_large`: RGB images (1024,1024,3) uint8
+
+  Key Details:
+  - Small patches: 256x256 pixels with 384-dim features
+  - Large images: 1024x1024 pixels with 16 sets of 384-dim features
+  - All images use RGB format (3 channels) with uint8 values
+  - Features stored as float32 arrays
+
 * **Loading Data:** See [./ldm/data/hybrid_cond/crc_only_patch.py](./ldm/data/hybrid_cond/crc_only_patch.py) for an example of how to load data.
 * **Embedding Guidance:** We feed the SSL embedding via cross-attention (See Line 52 of [./ldm/modules/encoders/modules.py](./ldm/modules/encoders/modules.py)).
 
@@ -68,17 +83,5 @@ python main.py -t --gpus 0,1 --base configs/latent-diffusion/crc/only_patch_20x.
 Refer to these notebooks for generating images using the provided models:
 
 * **Image Patches:** [./notebooks/brca_patch_synthesis.ipynb](./notebooks/brca_patch_synthesis.ipynb)
-* **Large Images:** [./notebooks/large_image_generation.ipynb](./notebooks/large_image_generation.ipynb) 
+* **Large Images:** [./notebooks/large_image_generation.ipynb](./notebooks/large_image_generation.ipynb)
 
-
-## Bibtex
-
-```
-@inproceedings{graikos2024learned,
-  title={Learned representation-guided diffusion models for large-image generation},
-  author={Graikos, Alexandros and Yellapragada, Srikar and Le, Minh-Quan and Kapse, Saarthak and Prasanna, Prateek and Saltz, Joel and Samaras, Dimitris},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={8532--8542},
-  year={2024}
-}
-```

@@ -4,7 +4,7 @@ torchvision==0.15.2+cu118
 torchaudio==2.0.2+cu118
 --extra-index-url https://download.pytorch.org/whl/cu118
 
-xformers==0.0.23
+xformers==0.0.20
 pytorch-lightning==1.4.2
 
 # HuggingFace Ecosystem

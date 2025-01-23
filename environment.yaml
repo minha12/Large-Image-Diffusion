@@ -1,41 +1,37 @@
 name: sd
 channels:
-  - pytorch
   - conda-forge
-  - defaults
+  - pytorch
+  - nodefaults
 
 dependencies:
-  # Core Python
-  - python=3.8.19
-  
-  # CUDA Toolkit
-  - cudatoolkit=11.8.0
-  
-  # System Libraries
-  - ffmpeg=4.3
-  - gdal=3.6.2
-  - geos=3.8.0
-  - openslide=3.4.1
-  - poppler=21.03.0
-  - libgcc-ng=11.2.0
-  - libstdcxx-ng=11.2.0
-  - libglib=2.68.4
-  - cairo=1.16.0
-  
-  # Image Processing Libraries
-  - libtiff=4.2.0
-  - libwebp=1.2.4
-  - jpeg=9e
-  - lcms2=2.12
+  # Core Python and CUDA
+  - python=3.10
+  - cudatoolkit=11.8
   
   # Core ML Packages
-  - numpy=1.23.1
-  - scipy=1.9.1
-  - pandas=2.0.3
-  - scikit-learn=1.3.0
-  - matplotlib=3.7.3
+  - numpy>=1.24
+  - scipy>=1.11
+  - pandas>=2.1
+  - scikit-learn>=1.3
+  - matplotlib>=3.7
+  
+  # System Libraries (without strict version pins)
+  - ffmpeg
+  - gdal>=3.6
+  - geos
+  - openslide
+  - poppler
+  - glib
+  - cairo
+  
+  # Image Processing Libraries
+  - libtiff
+  - libwebp
+  - libjpeg-turbo
+  - lcms2
   
   # Dev Tools
-  - jupyterlab=4.0.6
-  - ipywidgets=8.1.2
-  - cmake=3.27.4
+  - jupyterlab>=4.0
+  - ipywidgets>=8.1
+  - cmake>=3.27

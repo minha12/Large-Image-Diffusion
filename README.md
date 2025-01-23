@@ -69,6 +69,69 @@ We provide the following trained models
   - Features stored as float32 arrays
 
 * **Loading Data:** See [./ldm/data/hybrid_cond/crc_only_patch.py](./ldm/data/hybrid_cond/crc_only_patch.py) for an example of how to load data.
+
+  **Data Pipeline Overview:**
+
+  1. Expected Directory Structure:
+  ```
+  root/
+  ├── patches_{mag}_all.npy     # NumPy array of image paths
+  ├── features.h5               # HDF5 file with SSL features
+  └── {image_files}            # Actual image files referenced in patches_{mag}_all.npy
+  ```
+
+  2. Data Flow:
+  ```mermaid
+  graph TD
+      A[Load patches list] --> B[Load features.h5]
+      B --> C[Initialize Dataset]
+      C --> D[Per-item Processing]
+      D --> E[Batch Formation]
+      
+      subgraph "Per-item Processing"
+          F[Load Image] --> G[Convert to RGB]
+          G --> H[Normalize to [-1,1]]
+          H --> I[Apply Random Flips]
+          J[Load SSL Features] --> K[Optional Feature Zeroing]
+      end
+  ```
+
+  3. Configuration Requirements:
+     - `root`: Base directory path
+     - `magnification`: Magnification level (e.g., "20x")
+     - `p_uncond`: Probability for feature zeroing (default=0)
+
+  4. Processing Steps:
+  ```mermaid
+  graph TD
+      A[Get image path] --> B[Load image with PIL]
+      B --> C[Convert to RGB array]
+      C --> D[Skip if not 256x256]
+      D --> E[Normalize to [-1,1]]
+      E --> F[Random flips]
+      G[Load SSL features] --> H[Maybe zero features]
+      F --> I[Return dict]
+      H --> I
+  ```
+
+  5. Output Format:
+  ```python
+  return {
+      "image": np.array([-1,1] range, float32),  # (256,256,3)
+      "feat_patch": np.array(features),          # (384,) for HIPT
+      "human_label": str("")
+  }
+  ```
+
+  6. DataLoader Configuration Example:
+  ```yaml
+  data:
+    params:
+      batch_size: 100
+      num_workers: 16
+      wrap: false
+  ```
+
 * **Embedding Guidance:** We feed the SSL embedding via cross-attention (See Line 52 of [./ldm/modules/encoders/modules.py](./ldm/modules/encoders/modules.py)).
 
 

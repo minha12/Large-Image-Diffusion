@@ -90,7 +90,7 @@ We provide the following trained models
       
       subgraph "Per-item Processing"
           F[Load Image] --> G[Convert to RGB]
-          G --> H[Normalize to [-1,1]]
+          G --> H[Normalize image]
           H --> I[Apply Random Flips]
           J[Load SSL Features] --> K[Optional Feature Zeroing]
       end
@@ -106,21 +106,33 @@ We provide the following trained models
   graph TD
       A[Get image path] --> B[Load image with PIL]
       B --> C[Convert to RGB array]
-      C --> D[Skip if not 256x256]
-      D --> E[Normalize to [-1,1]]
+      C --> D[Verify 256x256 size]
+      D --> E[Normalize image values]
       E --> F[Random flips]
-      G[Load SSL features] --> H[Maybe zero features]
-      F --> I[Return dict]
+      G[Load SSL features] --> H[Apply feature dropout]
+      F --> I[Return batch dict]
       H --> I
   ```
 
   5. Output Format:
   ```python
-  return {
-      "image": np.array([-1,1] range, float32),  # (256,256,3)
-      "feat_patch": np.array(features),          # (384,) for HIPT
-      "human_label": str("")
+  # Example of actual values and shapes
+  batch = {
+      "image": np.array(...),          # Shape: (256,256,3), Range: [-1,1]
+      "feat_patch": np.array(...),     # Shape: (384,), SSL features
+      "human_label": ""                # Empty string placeholder
   }
+  
+  # Actual processing code
+  def process_image(image):
+      # Convert to float32 and normalize to [-1,1] range
+      return (image.astype(np.float32) / 127.5) - 1.0
+      
+  def process_features(features, p_uncond=0.1):
+      # Apply random feature dropout
+      if np.random.rand() < p_uncond:
+          return np.zeros_like(features)
+      return features
   ```
 
   6. DataLoader Configuration Example:

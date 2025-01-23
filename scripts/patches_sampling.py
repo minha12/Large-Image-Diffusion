@@ -178,7 +178,7 @@ def main(
     )
     
     # Prepare dataset
-    generator.prepare_dataset(batch_size=batch_size)
+    # generator.prepare_dataset(batch_size=batch_size)
     
     # Generate images
     result = generator.generate_images(

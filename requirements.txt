@@ -5,7 +5,6 @@ torchaudio==2.0.2+cu118
 --extra-index-url https://download.pytorch.org/whl/cu118
 
 xformers==0.0.20
-pytorch-lightning==1.4.2
 
 # HuggingFace Ecosystem
 diffusers==0.28.2
@@ -51,3 +50,9 @@ qtconsole==5.5.1
 beautifulsoup4==4.12.3
 lxml==5.2.1
 tensorboard==2.14.0
+
+pytorch-lightning==1.9.5
+torchmetrics==0.11.4
+bitsandbytes==0.41.1
+taming-transformers-rom1504==0.0.6
+h5py==3.9.0

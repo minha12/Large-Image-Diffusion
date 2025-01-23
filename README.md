@@ -92,8 +92,15 @@ We provide the following trained models
           F[Load Image] --> G[Convert to RGB]
           G --> H[Normalize image]
           H --> I[Apply Random Flips]
+          I --> L[Processed Image]
           J[Load SSL Features] --> K[Optional Feature Zeroing]
+          K --> M[Processed Features]
       end
+      
+      D --> F
+      D --> J
+      L --> E
+      M --> E
   ```
 
   3. Configuration Requirements:
